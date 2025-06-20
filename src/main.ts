@@ -149,13 +149,13 @@ function initializeAudioCapture(): void {
   });
 }
 
-ipcMain.handle('start-audio-capture', async (event, audioDevice: string = 'BlackHole 2ch'): Promise<{ success: boolean; error?: string }> => {
+ipcMain.handle('start-audio-capture', async (): Promise<{ success: boolean; error?: string }> => {
   if (!audioCapture) {
     console.error('Audio capture not initialized');
     return { success: false, error: 'Audio capture not initialized' };
   }
   try {
-    await audioCapture.startCapture(audioDevice);
+    await audioCapture.startCapture();
     return { success: true };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);

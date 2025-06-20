@@ -10,7 +10,6 @@ const envStatusElement = document.getElementById('envStatus') as HTMLSpanElement
 const selectionBtn = document.getElementById('selectionBtn') as HTMLButtonElement;
 const manualInput = document.getElementById('manualInput') as HTMLTextAreaElement;
 const manualSubmitBtn = document.getElementById('manualSubmitBtn') as HTMLButtonElement;
-const audioDeviceSelect = document.getElementById('audioDevice') as HTMLSelectElement;
 
 // Mock interview data
 const mockTranscription = `面接官: 本日はお忙しい中お時間をいただき、ありがとうございます。まず自己紹介をお願いします。
@@ -135,30 +134,21 @@ function updateEnvStatus(hasApiKey: boolean, message: string): void {
 async function startRecording(): Promise<void> {
     try {
         updateStatus('録音開始中...');
-        const selectedDevice = audioDeviceSelect.value;
-        console.log('Selected audio device:', selectedDevice);
-        const result = await window.electronAPI.startAudioCapture(selectedDevice);
+        const result = await window.electronAPI.startAudioCapture();
         
         if (result.success) {
             isRecording = true;
             startBtn.disabled = true;
             stopBtn.disabled = false;
-            audioDeviceSelect.disabled = true; // Disable device selection while recording
             updateStatus('録音中');
             realTimeTranscription = '';
             
             // Check if transcription is ready
             const isReady = await window.electronAPI.isTranscriptionReady();
-            let deviceName = selectedDevice;
-            if (selectedDevice === 'default') {
-                deviceName = 'デフォルトマイク';
-            } else if (selectedDevice === 'MacBook Proのマイク') {
-                deviceName = 'MacBook Pro内蔵マイク';
-            }
             if (isReady) {
-                transcriptionArea.textContent = `音声をキャプチャしています... (デバイス: ${deviceName})\n文字起こしを開始します（5秒間隔）`;
+                transcriptionArea.textContent = '音声をキャプチャしています...\n文字起こしを開始します（5秒間隔）';
             } else {
-                transcriptionArea.textContent = `音声をキャプチャしています... (デバイス: ${deviceName})\n.envファイルにAPIキーを設定すると文字起こしが開始されます。`;
+                transcriptionArea.textContent = '音声をキャプチャしています...\n.envファイルにAPIキーを設定すると文字起こしが開始されます。';
             }
         } else {
             updateStatus('エラー: ' + result.error);
@@ -167,7 +157,6 @@ async function startRecording(): Promise<void> {
     } catch (error) {
         updateStatus('録音開始エラー');
         console.error('Start recording error:', error);
-        audioDeviceSelect.disabled = false;
     }
 }
 
@@ -180,7 +169,6 @@ async function stopRecording(): Promise<void> {
             isRecording = false;
             startBtn.disabled = false;
             stopBtn.disabled = true;
-            audioDeviceSelect.disabled = false; // Re-enable device selection
             updateStatus('待機中');
             transcriptionArea.textContent = mockTranscription;
         } else {
@@ -190,7 +178,6 @@ async function stopRecording(): Promise<void> {
     } catch (error) {
         updateStatus('録音停止エラー');
         console.error('Stop recording error:', error);
-        audioDeviceSelect.disabled = false;
     }
 }
 
@@ -222,7 +209,6 @@ function setupIPCListeners(): void {
         isRecording = false;
         startBtn.disabled = false;
         stopBtn.disabled = true;
-        audioDeviceSelect.disabled = false;
     });
 
     window.electronAPI.onTranscriptionResult((event, text: string) => {
