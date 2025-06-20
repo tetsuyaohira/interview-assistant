@@ -7,7 +7,6 @@ const startBtn = document.getElementById('startBtn') as HTMLButtonElement;
 const stopBtn = document.getElementById('stopBtn') as HTMLButtonElement;
 const statusElement = document.getElementById('status') as HTMLSpanElement;
 const envStatusElement = document.getElementById('envStatus') as HTMLSpanElement;
-const transcriptionStatusElement = document.getElementById('transcriptionStatus') as HTMLSpanElement;
 const selectionBtn = document.getElementById('selectionBtn') as HTMLButtonElement;
 const manualInput = document.getElementById('manualInput') as HTMLTextAreaElement;
 const manualSubmitBtn = document.getElementById('manualSubmitBtn') as HTMLButtonElement;
@@ -115,19 +114,9 @@ async function checkEnvironmentStatus(): Promise<void> {
         // Wait a bit for the transcription service to initialize
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        // Check transcription service status
-        const isReady = await window.electronAPI.isTranscriptionReady();
-        console.log('Transcription ready:', isReady);
-        
-        if (isReady) {
-            updateTranscriptionStatus('準備完了');
-        } else {
-            updateTranscriptionStatus('APIキー未設定');
-        }
     } catch (error) {
         console.error('Failed to check environment status:', error);
         updateEnvStatus(false, 'エラー: 環境チェックに失敗しました');
-        updateTranscriptionStatus('エラー');
     }
 }
 
@@ -197,16 +186,6 @@ function updateStatus(status: string): void {
     statusElement.textContent = status;
 }
 
-function updateTranscriptionStatus(status: string): void {
-    transcriptionStatusElement.textContent = status;
-    transcriptionStatusElement.className = 'transcription-status';
-    
-    if (status === '準備完了') {
-        transcriptionStatusElement.classList.add('ready');
-    } else {
-        transcriptionStatusElement.classList.add('not-ready');
-    }
-}
 
 function setupIPCListeners(): void {
     window.electronAPI.onAudioCaptureStarted(() => {
@@ -242,7 +221,6 @@ function setupIPCListeners(): void {
 
     window.electronAPI.onTranscriptionError((event, error: string) => {
         console.error('Transcription error:', error);
-        updateTranscriptionStatus('文字起こしエラー');
     });
 }
 
