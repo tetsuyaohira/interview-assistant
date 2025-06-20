@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>面接アシスタント</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>面接アシスタント</h1>
+        <div class="controls">
+            <div class="env-info">
+                <span class="env-label">設定ファイル:</span>
+                <span id="envStatus" class="env-status">.envファイルをチェック中...</span>
+            </div>
+            <div class="recording-controls">
+                <button id="startBtn" class="control-btn start">録音開始</button>
+                <button id="stopBtn" class="control-btn stop" disabled>録音停止</button>
+                <span id="status" class="status">待機中</span>
+                <span id="transcriptionStatus" class="transcription-status">文字起こし準備中</span>
+            </div>
+        </div>
+        <div class="content">
+            <div class="pane left-pane">
+                <h2>文字起こし</h2>
+                <div id="transcription" class="text-area">
+                    ここに文字起こしされたテキストが表示されます...
+                </div>
+                <button id="selectionBtn" class="selection-button">面接回答を生成</button>
+            </div>
+            <div class="pane right-pane">
+                <h2>回答</h2>
+                <div id="response" class="text-area">
+                    ここに生成された回答が表示されます...
+                </div>
+                
+                <div class="manual-input-section">
+                    <h3>手動質問入力</h3>
+                    <div class="input-container">
+                        <textarea id="manualInput" class="manual-input" placeholder="質問や面接のやり取りを直接入力してください...例: 『あなたの強みを教えてください』"></textarea>
+                        <button id="manualSubmitBtn" class="manual-submit-btn">AI回答生成</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../dist/renderer.js"></script>
+</body>
+</html>
