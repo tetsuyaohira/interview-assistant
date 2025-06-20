@@ -338,7 +338,7 @@ function handleSelectionButtonClick(): void {
     hideSelectionButton(false);
     
     // Generate interview response with current selection
-    sendToClaudeCode(currentSelectedText, false);
+    generateInterviewResponse(currentSelectedText, false);
 }
 
 async function handleManualSubmit(): Promise<void> {
@@ -358,7 +358,7 @@ async function handleManualSubmit(): Promise<void> {
     
     try {
         // Generate response
-        await sendToClaudeCode(inputText, true);
+        await generateInterviewResponse(inputText, true);
     } finally {
         // Re-enable button
         manualSubmitBtn.disabled = false;
@@ -366,7 +366,7 @@ async function handleManualSubmit(): Promise<void> {
     }
 }
 
-async function sendToClaudeCode(text: string, isManualInput: boolean = false): Promise<void> {
+async function generateInterviewResponse(text: string, isManualInput: boolean = false): Promise<void> {
     const sourceLabel = isManualInput ? '入力されたテキスト' : '選択されたテキスト';
     
     try {
@@ -376,7 +376,7 @@ async function sendToClaudeCode(text: string, isManualInput: boolean = false): P
         responseArea.textContent = `${sourceLabel}:\n"${text}"\n\n🔄 面接アシスタントをチェック中...`;
         
         // Check if Interview Assistant is available
-        const isAvailable = await window.electronAPI.checkClaudeCodeAvailability();
+        const isAvailable = await window.electronAPI.checkInterviewAssistantAvailability();
         if (!isAvailable) {
             responseArea.textContent = `${sourceLabel}:\n"${text}"\n\n❌ 面接アシスタントが利用できません\n\n.envファイルにOPENAI_API_KEYが設定されているか確認してください。`;
             return;
@@ -386,7 +386,7 @@ async function sendToClaudeCode(text: string, isManualInput: boolean = false): P
         responseArea.textContent = `${sourceLabel}:\n"${text}"\n\n🚀 面接回答を生成中...\n(3-5秒程度かかります)`;
         
         // Send to Interview Assistant
-        const result = await window.electronAPI.sendToClaudeCode(text);
+        const result = await window.electronAPI.generateInterviewResponse(text);
         
         if (result.success && result.response) {
             responseArea.textContent = `${sourceLabel}:\n"${text}"\n\n✅ 面接回答:\n\n${result.response}`;

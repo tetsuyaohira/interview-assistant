@@ -201,7 +201,7 @@ ipcMain.handle('check-env-status', (): { hasApiKey: boolean; message: string } =
   }
 });
 
-ipcMain.handle('send-to-claude-code', async (event, selectedText: string): Promise<{ success: boolean; response?: string; error?: string }> => {
+ipcMain.handle('generate-interview-response', async (event, selectedText: string): Promise<{ success: boolean; response?: string; error?: string }> => {
   if (!interviewAssistantService) {
     console.error('Interview Assistant service not initialized');
     return { success: false, error: 'Interview Assistant service not initialized' };
@@ -234,6 +234,6 @@ ipcMain.handle('resume-audio-capture', (): { success: boolean; error?: string } 
   return { success: false, error: 'Audio capture not initialized' };
 });
 
-ipcMain.handle('check-claude-code-availability', (): boolean => {
+ipcMain.handle('check-interview-assistant-availability', (): boolean => {
   return interviewAssistantService ? interviewAssistantService.isInitialized() : false;
 });
