@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
+import * as fs from 'fs';
 import * as dotenv from 'dotenv';
 import { AudioCapture } from './audioCapture';
 import { TranscriptionService } from './transcriptionService';
@@ -42,6 +43,8 @@ function createWindow(): void {
 }
 
 app.whenReady().then(() => {
+  // Clean up temp directory on startup
+  cleanupTempDirectory();
   // Initialize services first
   initializeAudioCapture();
   // Then create window
@@ -218,21 +221,36 @@ ipcMain.handle('generate-interview-response', async (event, selectedText: string
   }
 });
 
-ipcMain.handle('pause-audio-capture', (): { success: boolean; error?: string } => {
-  if (audioCapture) {
-    audioCapture.pauseCapture();
-    return { success: true };
+function cleanupTempDirectory(): void {
+  const tempDir = path.join(process.cwd(), 'temp');
+  
+  if (!fs.existsSync(tempDir)) {
+    console.log('Temp directory does not exist, skipping cleanup');
+    return;
   }
-  return { success: false, error: 'Audio capture not initialized' };
-});
 
-ipcMain.handle('resume-audio-capture', (): { success: boolean; error?: string } => {
-  if (audioCapture) {
-    audioCapture.resumeCapture();
-    return { success: true };
+  try {
+    const files = fs.readdirSync(tempDir);
+    let deletedCount = 0;
+
+    for (const file of files) {
+      const filePath = path.join(tempDir, file);
+      const stats = fs.statSync(filePath);
+      
+      // Delete files older than 1 hour
+      const oneHourAgo = Date.now() - (60 * 60 * 1000);
+      if (stats.mtime.getTime() < oneHourAgo) {
+        fs.unlinkSync(filePath);
+        deletedCount++;
+        console.log('Deleted old temp file:', file);
+      }
+    }
+
+    console.log(`Cleanup completed: ${deletedCount} files deleted from temp directory`);
+  } catch (error) {
+    console.warn('Failed to cleanup temp directory:', error);
   }
-  return { success: false, error: 'Audio capture not initialized' };
-});
+}
 
 ipcMain.handle('check-interview-assistant-availability', (): boolean => {
   return interviewAssistantService ? interviewAssistantService.isInitialized() : false;
