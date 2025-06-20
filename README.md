@@ -67,7 +67,15 @@ cp .env.example .env
 OPENAI_API_KEY=your_openai_api_key_here
 ```
 
-### 4. BlackHoleの設定
+### 4. プロフィール設定
+```bash
+# profile.mdを作成
+cp profile.md.example profile.md
+```
+
+`profile.md`を編集してあなたの経歴・スキル・経験を記入してください。これにより、パーソナライズされた面接回答が生成されます。
+
+### 5. BlackHoleの設定
 ```bash
 # BlackHoleがインストールされているか確認
 ls /Applications/BlackHole*
@@ -77,7 +85,7 @@ ls /Applications/BlackHole*
 
 **重要**: BlackHoleの設定手順（下記「BlackHole設定」セクション参照）
 
-### 5. ビルドと実行
+### 6. ビルドと実行
 ```bash
 # TypeScriptをビルド
 npm run build
