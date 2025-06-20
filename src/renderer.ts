@@ -142,7 +142,7 @@ async function startRecording(): Promise<void> {
         if (result.success) {
             isRecording = true;
             startBtn.disabled = true;
-            stopBtn.disabled = true;
+            stopBtn.disabled = false;
             audioDeviceSelect.disabled = true; // Disable device selection while recording
             updateStatus('録音中');
             realTimeTranscription = '';
