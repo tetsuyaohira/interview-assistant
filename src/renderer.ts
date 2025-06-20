@@ -149,7 +149,12 @@ async function startRecording(): Promise<void> {
             
             // Check if transcription is ready
             const isReady = await window.electronAPI.isTranscriptionReady();
-            const deviceName = selectedDevice === 'default' ? 'デフォルトマイク' : selectedDevice;
+            let deviceName = selectedDevice;
+            if (selectedDevice === 'default') {
+                deviceName = 'デフォルトマイク';
+            } else if (selectedDevice === 'MacBook Proのマイク') {
+                deviceName = 'MacBook Pro内蔵マイク';
+            }
             if (isReady) {
                 transcriptionArea.textContent = `音声をキャプチャしています... (デバイス: ${deviceName})\n文字起こしを開始します（5秒間隔）`;
             } else {
