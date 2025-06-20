@@ -31,21 +31,26 @@ export class AudioCapture extends EventEmitter {
             const micConfig: any = {
                 rate: '16000',
                 channels: '1',
-                debug: false,
+                debug: false, // Keep debug disabled for cleaner logs
                 exitOnSilence: 6
             };
             
             // Only set device if not default
             if (audioDevice !== 'default') {
                 micConfig.device = audioDevice;
+                console.log('Setting mic device to:', audioDevice);
+            } else {
+                console.log('Using default mic device');
             }
             
+            console.log('Mic config:', micConfig);
             this.micInstance = mic(micConfig);
 
             this.micInputStream = this.micInstance.getAudioStream();
 
             if (this.micInputStream) {
                 this.micInputStream.on('data', (data: Buffer) => {
+                    // console.log(`Received audio data: ${data.length} bytes`); // Commented out for less noise
                     // Only process audio data if not paused
                     if (!this.isPaused) {
                         this.audioBuffer.push(data);
