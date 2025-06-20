@@ -19,22 +19,28 @@ export class AudioCapture extends EventEmitter {
         super();
     }
 
-    async startCapture(): Promise<void> {
+    async startCapture(audioDevice: string = 'BlackHole 2ch'): Promise<void> {
         try {
             if (this.isRecording) {
                 console.log('Already recording');
                 return;
             }
 
-            console.log('Starting audio capture...');
+            console.log('Starting audio capture with device:', audioDevice);
             
-            this.micInstance = mic({
+            const micConfig: any = {
                 rate: '16000',
                 channels: '1',
                 debug: false,
-                exitOnSilence: 6,
-                device: 'BlackHole 2ch' // Use BlackHole for system audio capture
-            });
+                exitOnSilence: 6
+            };
+            
+            // Only set device if not default
+            if (audioDevice !== 'default') {
+                micConfig.device = audioDevice;
+            }
+            
+            this.micInstance = mic(micConfig);
 
             this.micInputStream = this.micInstance.getAudioStream();
 

@@ -3,7 +3,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld('electronAPI', {
-  startAudioCapture: () => ipcRenderer.invoke('start-audio-capture'),
+  startAudioCapture: (audioDevice?: string) => ipcRenderer.invoke('start-audio-capture', audioDevice),
   stopAudioCapture: () => ipcRenderer.invoke('stop-audio-capture'),
   getAudioBuffer: () => ipcRenderer.invoke('get-audio-buffer'),
   isTranscriptionReady: () => ipcRenderer.invoke('is-transcription-ready'),
@@ -27,7 +27,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
 declare global {
   interface Window {
     electronAPI: {
-      startAudioCapture: () => Promise<{ success: boolean; error?: string }>;
+      startAudioCapture: (audioDevice?: string) => Promise<{ success: boolean; error?: string }>;
       stopAudioCapture: () => Promise<{ success: boolean; error?: string }>;
       getAudioBuffer: () => Promise<Buffer | null>;
       isTranscriptionReady: () => Promise<boolean>;

@@ -14,6 +14,13 @@
                 <span class="env-label">設定ファイル:</span>
                 <span id="envStatus" class="env-status">.envファイルをチェック中...</span>
             </div>
+            <div class="device-selection">
+                <label for="audioDevice" class="device-label">音声入力:</label>
+                <select id="audioDevice" class="device-select">
+                    <option value="BlackHole 2ch">BlackHole 2ch (システム音声)</option>
+                    <option value="default">デフォルトマイク</option>
+                </select>
+            </div>
             <div class="recording-controls">
                 <button id="startBtn" class="control-btn start">録音開始</button>
                 <button id="stopBtn" class="control-btn stop" disabled>録音停止</button>

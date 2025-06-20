@@ -66,6 +66,37 @@ h1 {
     color: #721c24;
 }
 
+.device-selection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.device-label {
+    font-weight: bold;
+    color: #495057;
+}
+
+.device-select {
+    padding: 6px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+    color: #495057;
+    cursor: pointer;
+}
+
+.device-select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
 .recording-controls {
     display: flex;
     justify-content: center;
