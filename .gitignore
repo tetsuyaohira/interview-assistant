@@ -11,6 +11,9 @@ dist/
 .env.test.local
 .env.production.local
 
+# Personal profile
+profile.md
+
 # OS generated files
 .DS_Store
 .DS_Store?
